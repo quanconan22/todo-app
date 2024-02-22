@@ -68,7 +68,7 @@ export default function TodoComponent(){
         if(values.description.length < 5){
             errors.description = "Enter atleast 5 characters"
         }
-        if(values.targetDate == null || values.targetDate == "" || moment(values.targetDate).isValid()){
+        if(values.targetDate == null || values.targetDate == "" ){
             errors.targetDate = "Enter a tartget date"
         }
         return errors
