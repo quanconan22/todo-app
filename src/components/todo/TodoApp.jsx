@@ -9,11 +9,12 @@ import ListTodosComponent from './ListTodosComponent'
 import ErrorsComponent from './ErrorsComponent'
 import WelcomeComponent from './WelcomeComponent'
 import LoginComponent from './LoginComponent'
+import TodoComponent from './TodoComponent'
 import AuthProvider, { useAuth } from './security/AuthContext'
 
 function AuthenticatedRoute({children}){
     const authContext = useAuth();
-    if(authContext.isAuhtenticated){
+    if(authContext.isAuthenticated){
         return children;
     }
     return <Navigate to="/"/>
@@ -26,22 +27,27 @@ export default function TodoApp(){
                 <BrowserRouter>
                     <HeaderComponent/>
                     <Routes>
-                        <Route path="/" element={<LoginComponent/>}></Route>
-                        <Route path="/login" element={<LoginComponent/>}></Route>
+                        <Route path="/" element={<LoginComponent/>}/>
+                        <Route path="/login" element={<LoginComponent/>}/>
                         <Route path="/welcome/:username" element={
                             <AuthenticatedRoute>
                                 <WelcomeComponent/>
                             </AuthenticatedRoute>
-                        }></Route>
-                        
+                        }/>   
                         <Route path="/todos" element={
                             <AuthenticatedRoute>
-                                <LogoutComponent/>
+                                <ListTodosComponent/>
                             </AuthenticatedRoute>
-                        }>        
-                        </Route>
-                        <Route path="/logout" element={<ListTodosComponent/>}></Route>
-                        <Route path="*" element={<ErrorsComponent/>}></Route>
+                        }/>   
+
+                        <Route path="/todo/:id" element={
+                            <AuthenticatedRoute>
+                                <TodoComponent/>
+                            </AuthenticatedRoute>
+                        }/>      
+                        
+                        <Route path="/logout" element={<LogoutComponent/>}/>
+                        <Route path="*" element={<ErrorsComponent/>}/>
                     </Routes>
                     <FooterComponent/>
                 </BrowserRouter>
