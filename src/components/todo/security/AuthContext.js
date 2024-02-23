@@ -1,4 +1,4 @@
-import { executeBasicAuthenticationService } from "../api/HelloWorldApiService";
+import { executeBasicAuthenticationService, executeJwtcAuthenticationService } from "../api/AuthenticationApiService";
 import { apiClient } from "../api/apiClient";
 const { createContext, useState, useContext } = require("react");
 
@@ -19,19 +19,24 @@ export default function AuthProvider({children}){
 
     async function login(username, password){
         try {
-            const baToken = "Basic " + window.btoa(username + ":" + password)
+            const response = await executeJwtcAuthenticationService(username,password)
+            // const baToken = "Basic " + window.btoa(username + ":" + password)
+            
 
-            const response = await executeBasicAuthenticationService(baToken)
+            // const response = await executeBasicAuthenticationService(baToken)
        
             if(response.status === 200){
+
+                const jwtToken = "Bearer " + response.data.token
+
                 setAuthenticated(true);
                 setUsername(username);
-                setToken(baToken);
+                setToken(jwtToken);
 
                 apiClient.interceptors.request.use(
                     (config) => {
                         console.log("Intercepting and adding a token")
-                        config.headers.Authorization = baToken
+                        config.headers.Authorization = jwtToken
                         return config
                     }
                 )
